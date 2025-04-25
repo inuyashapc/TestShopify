@@ -3,7 +3,7 @@
 client_id = "5d1d6493bd2e5412e59c98ea76c19cdf"
 name = "duyanhdove"
 handle = "duyanhdove-2"
-application_url = "https://hungry-vietnam-wrote-supporters.trycloudflare.com"
+application_url = "https://execute-oldest-moderate-mag.trycloudflare.com"
 embedded = true
 
 [build]
@@ -19,9 +19,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://hungry-vietnam-wrote-supporters.trycloudflare.com/auth/callback",
-  "https://hungry-vietnam-wrote-supporters.trycloudflare.com/auth/shopify/callback",
-  "https://hungry-vietnam-wrote-supporters.trycloudflare.com/api/auth/callback"
+  "https://execute-oldest-moderate-mag.trycloudflare.com/auth/callback",
+  "https://execute-oldest-moderate-mag.trycloudflare.com/auth/shopify/callback",
+  "https://execute-oldest-moderate-mag.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

@@ -17,6 +17,10 @@ export default function ModalExample({ active, handleChange, id }) {
     setTag("");
     handleChange();
     window.location.reload(); // 🆕 Reload lại page để thấy Tag mới
+    console.log(
+      "🚀 ========= window.location.pathname:",
+      window.location.pathname,
+    );
   }, [id, tag, handleChange]);
 
   const handleTagChange = useCallback((value) => setTag(value), []);

@@ -18,18 +18,16 @@ import ModalExample from "../components/modal";
 
 export async function loader({ request }) {
   const url = new URL(request.url);
-  const first = url.searchParams.get("first") || 5; // Giá trị mặc định là 5
+  const first = parseInt(url.searchParams.get("first") || "5", 10);
   const after = url.searchParams.get("after") || null;
 
-  const { admin, session } = await authenticate.admin(request);
+  const { admin } = await authenticate.admin(request);
   const products = await getAllProductWithPagination(
     admin.graphql,
     first,
     after,
   );
-  return json({
-    products,
-  });
+  return json({ products });
 }
 
 export async function action({ request }) {
@@ -46,39 +44,53 @@ export async function action({ request }) {
 }
 
 export default function ProductIndex() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [first, setFirst] = useState(5);
   const [active, setActive] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  console.log("🚀 ========= selectedId:", selectedId);
 
-  const handleChange = useCallback(() => setActive(!active), [active]);
   const { products } = useLoaderData();
 
-  const handlePagination = (newPage) => {
-    const endCursor = products.products.pageInfo.endCursor;
+  const handleChange = useCallback(() => setActive(!active), [active]);
+
+  const { selectedResources, allResourcesSelected, handleSelectionChange } =
+    useIndexResourceState(
+      products.products.edges.map((product) => ({
+        id: product.node.id,
+        title: product.node.title,
+      })),
+    );
+
+  const listProduct = products.products.edges.map((product) => ({
+    id: product.node.id,
+    title: product.node.title,
+    price: product.node.variants.nodes,
+    tags: product.node.tags,
+  }));
+
+  const handleNextPage = () => {
+    if (products.products.pageInfo.hasNextPage) {
+      const endCursor = products.products.pageInfo.endCursor;
+      const url = new URL(window.location.href);
+      url.searchParams.set("after", endCursor);
+      window.location.href = url.toString();
+    }
+  };
+
+  const handlePreviousPage = () => {
     const url = new URL(window.location.href);
-    url.searchParams.set("first", first);
-    url.searchParams.set("after", endCursor);
-    window.location.href = url.toString();
+    const params = url.searchParams;
+    const currentAfter = params.get("after");
+
+    if (currentAfter) {
+      // Xóa param after để quay về trang trước
+      params.delete("after");
+      window.location.href = url.toString();
+    }
   };
 
   const resourceName = {
     singular: "product",
-    plural: "product",
+    plural: "products",
   };
-
-  const listProduct = products.products.edges.map((product) => {
-    return {
-      id: product.node.id,
-      title: product.node.title,
-      price: product.node.variants.nodes,
-      tags: product.node.tags,
-    };
-  });
-
-  const { selectedResources, allResourcesSelected, handleSelectionChange } =
-    useIndexResourceState(listProduct);
 
   const rowMarkup = listProduct.map(({ id, title, price, tags }, index) => (
     <IndexTable.Row
@@ -89,20 +101,25 @@ export default function ProductIndex() {
     >
       <IndexTable.Cell>
         <Text variant="bodyMd" fontWeight="bold" as="span">
-          {index}
+          {index + 1}
         </Text>
       </IndexTable.Cell>
       <IndexTable.Cell>{title}</IndexTable.Cell>
       <IndexTable.Cell>
-        {price.map(
-          (item, index) =>
-            `${item.price}${index !== price.length - 1 ? ", " : ""}`,
-        )}
+        {price.map((item, idx) => (
+          <span key={idx}>
+            {item.price}
+            {idx !== price.length - 1 ? ", " : ""}
+          </span>
+        ))}
       </IndexTable.Cell>
       <IndexTable.Cell>
-        {tags.map(
-          (tag, index) => `${tag}${index !== tags.length - 1 ? ", " : ""}`,
-        )}
+        {tags.map((tag, idx) => (
+          <span key={idx}>
+            {tag}
+            {idx !== tags.length - 1 ? ", " : ""}
+          </span>
+        ))}
       </IndexTable.Cell>
       <IndexTable.Cell>
         <Button
@@ -120,13 +137,10 @@ export default function ProductIndex() {
 
   return (
     <Page fullWidth>
-      <ui-title-bar title="Product">
-        <button variant="primary"> Create New Product</button>
-      </ui-title-bar>
       <Card>
         <IndexTable
           resourceName={resourceName}
-          itemCount={products.products.edges.length}
+          itemCount={listProduct.length}
           selectedItemsCount={
             allResourcesSelected ? "All" : selectedResources.length
           }
@@ -147,14 +161,10 @@ export default function ProductIndex() {
           id={selectedId}
         />
         <Pagination
-          hasPrevious
-          onPrevious={() => {
-            handlePagination(currentPage - 1);
-          }}
-          hasNext
-          onNext={() => {
-            handlePagination(currentPage + 1);
-          }}
+          hasPrevious={!!products.products.pageInfo.hasPreviousPage}
+          onPrevious={handlePreviousPage}
+          hasNext={!!products.products.pageInfo.hasNextPage}
+          onNext={handleNextPage}
         />
       </Card>
     </Page>

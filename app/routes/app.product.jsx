@@ -19,15 +19,26 @@ import ModalExample from "../components/modal";
 
 export async function loader({ request }) {
   const url = new URL(request.url);
-  const first = parseInt(url.searchParams.get("first") || "5", 10);
   const after = url.searchParams.get("after") || null;
+  const before = url.searchParams.get("before") || null;
+
+  let first = null;
+  let last = null;
+
+  if (before) {
+    last = parseInt(url.searchParams.get("last") || "5", 10);
+  } else {
+    first = parseInt(url.searchParams.get("first") || "5", 10);
+  }
 
   const { admin } = await authenticate.admin(request);
-  const products = await getAllProductWithPagination(
-    admin.graphql,
+  const products = await getAllProductWithPagination(admin.graphql, {
     first,
     after,
-  );
+    before,
+    last,
+  });
+
   return json({ products });
 }
 
@@ -47,7 +58,6 @@ export async function action({ request }) {
 export default function ProductIndex() {
   const [active, setActive] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  console.log("🚀 ========= selectedId:", selectedId);
 
   const { products } = useLoaderData();
 
@@ -73,18 +83,21 @@ export default function ProductIndex() {
       const endCursor = products.products.pageInfo.endCursor;
       const url = new URL(window.location.href);
       url.searchParams.set("after", endCursor);
+      url.searchParams.delete("before");
+      url.searchParams.set("first", "5");
+      url.searchParams.delete("last");
       window.location.href = url.toString();
     }
   };
 
   const handlePreviousPage = () => {
-    const url = new URL(window.location.href);
-    const params = url.searchParams;
-    const currentAfter = params.get("after");
-
-    if (currentAfter) {
-      // Xóa param after để quay về trang trước
-      params.delete("after");
+    if (products.products.pageInfo.hasPreviousPage) {
+      const startCursor = products.products.pageInfo.startCursor;
+      const url = new URL(window.location.href);
+      url.searchParams.set("before", startCursor);
+      url.searchParams.delete("after");
+      url.searchParams.set("last", "5");
+      url.searchParams.delete("first");
       window.location.href = url.toString();
     }
   };

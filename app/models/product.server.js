@@ -44,53 +44,67 @@ export async function getAllProduct(graphql) {
     products,
   };
 }
-export async function getAllProductWithPagination(graphql, first, after) {
-  const response = await graphql(`
-    query ProductWithShopify {
-      products(first: ${first}${after ? `, after: "${after}"` : ""}) {
-        edges {
-          node {
-            id
-            title
-            media(first: 2) {
-              edges {
-                node {
-                  id
-                  preview {
-                    image {
-                      url
+export async function getAllProductWithPagination(
+  graphql,
+  { first = null, after = null, before = null, last = null },
+) {
+  const variables = { first, after, before, last };
+
+  const response = await graphql(
+    `
+      query ProductWithShopify(
+        $first: Int
+        $after: String
+        $before: String
+        $last: Int
+      ) {
+        products(first: $first, after: $after, before: $before, last: $last) {
+          edges {
+            node {
+              id
+              title
+              media(first: 2) {
+                edges {
+                  node {
+                    id
+                    preview {
+                      image {
+                        url
+                      }
                     }
                   }
                 }
               }
-            }
-            variants(first: 10) {
-              nodes {
-                id
-                title
-                price
+              variants(first: 10) {
+                nodes {
+                  id
+                  title
+                  price
+                }
               }
+              tags
             }
-            tags
+            cursor
           }
-          cursor
-        }
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          endCursor
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
         }
       }
-    }`);
+    `,
+    { variables },
+  );
 
   const {
     data: { products },
   } = await response.json();
 
-  return {
-    products,
-  };
+  return { products };
 }
+
 export async function addTag(graphql, id, tag) {
   const response = await graphql(
     `

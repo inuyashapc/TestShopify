@@ -105,7 +105,7 @@ export default function Index() {
 
   return (
     <Page>
-      <ui-title-bar title="QR codes">
+      <ui-title-bar title="QR codes abc">
         <button variant="primary" onClick={() => navigate("/app/qrcodes/new")}>
           Create QR code
         </button>

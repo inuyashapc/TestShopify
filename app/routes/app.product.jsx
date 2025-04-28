@@ -3,6 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import {
   Button,
   Card,
+  Frame,
   Icon,
   IndexTable,
   Page,
@@ -46,6 +47,7 @@ export async function action({ request }) {
 export default function ProductIndex() {
   const [active, setActive] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  console.log("🚀 ========= selectedId:", selectedId);
 
   const { products } = useLoaderData();
 
@@ -136,37 +138,39 @@ export default function ProductIndex() {
   ));
 
   return (
-    <Page fullWidth>
-      <Card>
-        <IndexTable
-          resourceName={resourceName}
-          itemCount={listProduct.length}
-          selectedItemsCount={
-            allResourcesSelected ? "All" : selectedResources.length
-          }
-          onSelectionChange={handleSelectionChange}
-          headings={[
-            { title: "ID" },
-            { title: "Title" },
-            { title: "Price" },
-            { title: "Tags" },
-            { title: "Actions" },
-          ]}
-        >
-          {rowMarkup}
-        </IndexTable>
-        <ModalExample
-          active={active}
-          handleChange={handleChange}
-          id={selectedId}
-        />
-        <Pagination
-          hasPrevious={!!products.products.pageInfo.hasPreviousPage}
-          onPrevious={handlePreviousPage}
-          hasNext={!!products.products.pageInfo.hasNextPage}
-          onNext={handleNextPage}
-        />
-      </Card>
-    </Page>
+    <Frame>
+      <Page fullWidth>
+        <Card>
+          <IndexTable
+            resourceName={resourceName}
+            itemCount={listProduct.length}
+            selectedItemsCount={
+              allResourcesSelected ? "All" : selectedResources.length
+            }
+            onSelectionChange={handleSelectionChange}
+            headings={[
+              { title: "ID" },
+              { title: "Title" },
+              { title: "Price" },
+              { title: "Tags" },
+              { title: "Actions" },
+            ]}
+          >
+            {rowMarkup}
+          </IndexTable>
+          <ModalExample
+            active={active}
+            handleChange={handleChange}
+            id={selectedId}
+          />
+          <Pagination
+            hasPrevious={!!products.products.pageInfo.hasPreviousPage}
+            onPrevious={handlePreviousPage}
+            hasNext={!!products.products.pageInfo.hasNextPage}
+            onNext={handleNextPage}
+          />
+        </Card>
+      </Page>
+    </Frame>
   );
 }

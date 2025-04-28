@@ -1,11 +1,4 @@
-import {
-  Form,
-  FormLayout,
-  Frame,
-  Modal,
-  TextField,
-  Toast,
-} from "@shopify/polaris";
+import { Form, FormLayout, Modal, TextField, Toast } from "@shopify/polaris";
 import { useCallback, useState } from "react";
 
 export default function ModalExample({ active, handleChange, id }) {
@@ -30,7 +23,7 @@ export default function ModalExample({ active, handleChange, id }) {
     setTimeout(() => {
       setActiveToast(false);
       window.location.reload();
-    }, 5000);
+    }, 500);
   }, [id, tag, handleChange]);
 
   const handleTagChange = useCallback((value) => setTag(value), []);
@@ -39,12 +32,11 @@ export default function ModalExample({ active, handleChange, id }) {
     <Toast
       content="Tag added successfully!"
       onDismiss={() => setActiveToast(false)}
-      duration={5000}
     />
   ) : null;
 
   return (
-    <div>
+    <>
       <Modal
         open={active}
         onClose={handleChange}
@@ -75,7 +67,8 @@ export default function ModalExample({ active, handleChange, id }) {
           </Form>
         </Modal.Section>
       </Modal>
+
       {toastMarkup}
-    </div>
+    </>
   );
 }

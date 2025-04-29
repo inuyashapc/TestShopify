@@ -1,0 +1,20 @@
+<div class="product-info-block">
+  <h1>{{ product.title }}</h1>
+  <p>Người bán: {{ product.vendor }}</p>
+  <p>Giá: {{ product.price | money }}</p>
+  <p>Loại: {{ product.tags}}</p>
+  <p>Miêu tả:
+    {% if product.description != null %}
+    {{product.description}}
+    {% else %}
+    Đang chờ update
+    {% endif %}
+</div>
+{% schema %}
+{
+  "name": "Product Info Block",
+  "target": "section",
+  "templates": ["product"],
+  "settings": []
+}
+{% endschema %}

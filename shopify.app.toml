@@ -3,7 +3,7 @@
 client_id = "5d1d6493bd2e5412e59c98ea76c19cdf"
 name = "duyanhdove"
 handle = "duyanhdove-2"
-application_url = "https://electro-trade-incl-conspiracy.trycloudflare.com"
+application_url = "https://tribes-piece-sq-pas.trycloudflare.com"
 embedded = true
 
 [build]
@@ -19,9 +19,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://electro-trade-incl-conspiracy.trycloudflare.com/auth/callback",
-  "https://electro-trade-incl-conspiracy.trycloudflare.com/auth/shopify/callback",
-  "https://electro-trade-incl-conspiracy.trycloudflare.com/api/auth/callback"
+  "https://tribes-piece-sq-pas.trycloudflare.com/auth/callback",
+  "https://tribes-piece-sq-pas.trycloudflare.com/auth/shopify/callback",
+  "https://tribes-piece-sq-pas.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

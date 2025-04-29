@@ -1,0 +1,21 @@
+.btn {
+  margin-top: 8px;
+  color: black;
+  background-color: white;
+  width: 30%;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 400;
+  border-radius: 8px;
+  border: 1px solid black; /* thêm border mặc định */
+  transition: border-width ease; /* mượt mà khi hover */
+}
+
+.btn:hover {
+  border-width: 2px; /* tăng độ dày border khi hover */
+}
+
+.btn:active {
+  transform: scale(0.95); /* thu nhỏ nút lại một chút khi bấm */
+  background-color: #f0f0f0; /* đổi màu nền khi bấm */
+}

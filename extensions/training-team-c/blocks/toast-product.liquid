@@ -1,0 +1,32 @@
+<div class="toast-product">
+  <button class="btn" onclick="showProductInfo()">Click Me</button>
+</div>
+
+<script>
+  function showProductInfo() {
+    var title = "{{ product.title }}";
+    var vendor = "{{ product.vendor }}";
+    var price = "{{ product.price | money }}";
+    var tags = "{{ product.tags }}";
+    var description = `{% if product.description != null %}{{ product.description }}{% else %}Đang chờ update{% endif %}`;
+
+    var message = 
+      "Tên sản phẩm: " + title + "\n" +
+      "Người bán: " + vendor + "\n" +
+      "Giá: " + price + "\n" +
+      "Loại: " + tags + "\n" +
+      "Miêu tả: " + description;
+
+    alert(message);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Toast Product",
+  "target": "section",
+  "templates": ["product"],
+  "settings": [],
+  "stylesheet": "toast-product.css"
+}
+{% endschema %}

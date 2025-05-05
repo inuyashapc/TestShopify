@@ -1,16 +1,47 @@
 <div class="product-info-block">
-  <h1>{{ product.title }}</h1>
-  <p>Người bán: {{ product.vendor }}</p>
-  <p>Giá: {{ product.price | money }}</p>
-  <p>Loại: {{ product.tags}}</p>
-  <p>Miêu tả:
-    {% if product.description != null %}
-    {{product.description}}
-    {% else %}
-    Đang chờ update
-    {% endif %}
+  <div class="toast-product">
+    <button class="btn" onclick="showProductInfo()">
+      <span id='btn1'>Show </span>
+      <span id='btn2' style="display: none;">Hide </span>
+      details</button>
+  </div>
+
+  <div id="product-details" style="display: none;">
+    <h1>{{ product.title }}</h1>
+    <p>Người bán: {{ product.vendor }}</p>
+    <p>Giá: {{ product.price | money }}</p>
+    <p>Loại: {{ product.tags }}</p>
+    <p>Miêu tả:
+      {% if product.description != null %}
+      {{ product.description }}
+      {% else %}
+      Đang chờ update
+      {% endif %}
+    </p>
+  </div>
 </div>
+
+<script>
+  function showProductInfo() {
+    var details = document.getElementById("product-details");
+    if (details.style.display === "none") {
+      details.style.display = "block";
+    } else {
+      details.style.display = "none";
+    }
+    var detailsBtn1 = document.getElementById("btn1");
+    var detailsBtn2 = document.getElementById("btn2");
+    if (detailsBtn1.style.display === "none") {
+      detailsBtn1.style.display = "";
+      detailsBtn2.style.display = "none";
+    } else {
+      detailsBtn1.style.display = "none";
+      detailsBtn2.style.display = "";
+    }
+  }
+</script>
 {% schema %}
+
 {
   "name": "Product Info Block",
   "target": "section",

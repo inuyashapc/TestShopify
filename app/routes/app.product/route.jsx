@@ -161,7 +161,6 @@ export default function ProductIndex() {
       </IndexTable.Cell>
     </IndexTable.Row>
   ));
-
   console.log(
     "ABC: ",
     fetcher.state == "submitting" || fetcher.state == "loading",

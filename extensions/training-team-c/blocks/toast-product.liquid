@@ -1,9 +1,9 @@
 <div class="toast-product">
-  <button class="btn" onclick="showProductInfo()">Click Me</button>
+  <button class="btn" onclick="showMore()">Show more</button>
 </div>
 
 <script>
-  function showProductInfo() {
+  function showMore() {
     var title = "{{ product.title }}";
     var vendor = "{{ product.vendor }}";
     var price = "{{ product.price | money }}";

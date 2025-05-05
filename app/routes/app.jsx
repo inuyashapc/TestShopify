@@ -24,6 +24,7 @@ export default function App() {
         </Link>
         <Link to="/app/qr-list">QR List</Link>
         <Link to="/app/product">List Product</Link>
+        <Link to="/app/test">Test</Link>
       </NavMenu>
       <Outlet />
     </AppProvider>

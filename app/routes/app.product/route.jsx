@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useFetcher } from "@remix-run/react";
 import {
   Button,
   Card,
@@ -8,14 +8,16 @@ import {
   IndexTable,
   Page,
   Pagination,
-  Text,
   useIndexResourceState,
 } from "@shopify/polaris";
-import { useCallback, useState } from "react";
-import { addTag, getAllProductWithPagination } from "../models/product.server";
-import { authenticate } from "../shopify.server";
 import { EditIcon } from "@shopify/polaris-icons";
-import ModalExample from "../components/modal";
+import { useCallback, useEffect, useRef, useState } from "react";
+import ModalExample from "../../components/modal";
+import {
+  addTag,
+  getAllProductWithPagination,
+} from "../../models/product.server";
+import { authenticate } from "../../shopify.server";
 
 export async function loader({ request }) {
   const url = new URL(request.url);
@@ -48,9 +50,8 @@ export async function action({ request }) {
   const tag = formData.get("tag");
 
   const { admin } = await authenticate.admin(request); // Authenticate lại
-  const result = await addTag(admin.graphql, id, tag);
 
-  console.log("🚀 Tag Added:", result);
+  await addTag(admin.graphql, id, tag);
 
   return json({ success: true });
 }
@@ -60,6 +61,22 @@ export default function ProductIndex() {
   const [selectedId, setSelectedId] = useState(null);
 
   const { products } = useLoaderData();
+  const fetcher = useFetcher();
+  const shouldReload = useRef(false);
+  useEffect(() => {
+    console.log("check", fetcher.state);
+    if (fetcher.state === "submitting") {
+      shouldReload.current = true;
+    }
+    if (fetcher.state === "idle" && shouldReload.current) {
+      shouldReload.current = false;
+      fetcher.load("/app/product");
+    }
+    // console.log("tét fetcher", fetcher.state, fetcher.data);
+    // if (fetcher.state === "idle" && fetcher.data) {
+    //   fetcher.load("/app/product"); // loader lấy dữ liệu mới
+    // }
+  }, [fetcher.state]);
 
   const handleChange = useCallback(() => setActive(!active), [active]);
 
@@ -114,11 +131,6 @@ export default function ProductIndex() {
       selected={selectedResources.includes(id)}
       position={index}
     >
-      <IndexTable.Cell>
-        <Text variant="bodyMd" fontWeight="bold" as="span">
-          {index + 1}
-        </Text>
-      </IndexTable.Cell>
       <IndexTable.Cell>{title}</IndexTable.Cell>
       <IndexTable.Cell>
         {price.map((item, idx) => (
@@ -150,11 +162,16 @@ export default function ProductIndex() {
     </IndexTable.Row>
   ));
 
+  console.log(
+    "ABC: ",
+    fetcher.state == "submitting" || fetcher.state == "loading",
+  );
   return (
     <Frame>
       <Page fullWidth>
         <Card>
           <IndexTable
+            loading={true}
             resourceName={resourceName}
             itemCount={listProduct.length}
             selectedItemsCount={
@@ -162,7 +179,6 @@ export default function ProductIndex() {
             }
             onSelectionChange={handleSelectionChange}
             headings={[
-              { title: "ID" },
               { title: "Title" },
               { title: "Price" },
               { title: "Tags" },
@@ -175,6 +191,7 @@ export default function ProductIndex() {
             active={active}
             handleChange={handleChange}
             id={selectedId}
+            fetcher={fetcher}
           />
           <Pagination
             hasPrevious={!!products.products.pageInfo.hasPreviousPage}

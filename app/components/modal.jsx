@@ -1,7 +1,7 @@
 import { Form, FormLayout, Modal, TextField, Toast } from "@shopify/polaris";
 import { useCallback, useState } from "react";
 
-export default function ModalExample({ active, handleChange, id }) {
+export default function ModalExample({ active, handleChange, id, fetcher }) {
   const [tag, setTag] = useState("");
   const [activeToast, setActiveToast] = useState(false);
 
@@ -10,21 +10,22 @@ export default function ModalExample({ active, handleChange, id }) {
     formData.append("id", id);
     formData.append("tag", tag);
 
-    await fetch(window.location.pathname, {
-      method: "POST",
-      body: formData,
-    });
+    // await fetch(window.location.pathname, {
+    //   method: "POST",
+    //   body: formData,
+    //   credentials: "same-origin",
+    // });
+    // fetcher.submit();
+
+    fetcher.submit(
+      { id: id, tag: tag },
+      { method: "post", action: "/app/product" },
+    );
 
     setTag("");
-    handleChange(); // đóng modal
-    setActiveToast(true); // Hiện Toast
-
-    // Sau 5s tự động ẩn Toast và reload
-    setTimeout(() => {
-      setActiveToast(false);
-      window.location.reload();
-    }, 500);
-  }, [id, tag, handleChange]);
+    handleChange();
+    setActiveToast(true);
+  }, [id, tag, handleChange, fetcher]);
 
   const handleTagChange = useCallback((value) => setTag(value), []);
 

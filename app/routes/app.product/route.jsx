@@ -171,7 +171,6 @@ export default function ProductIndex() {
       <Page fullWidth>
         <Card>
           <IndexTable
-            loading={true}
             resourceName={resourceName}
             itemCount={listProduct.length}
             selectedItemsCount={

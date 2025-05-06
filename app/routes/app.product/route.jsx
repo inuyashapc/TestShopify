@@ -61,10 +61,10 @@ export default function ProductIndex() {
   const [selectedId, setSelectedId] = useState(null);
 
   const { products } = useLoaderData();
+  console.log("🚀 ========= products:", products);
   const fetcher = useFetcher();
   const shouldReload = useRef(false);
   useEffect(() => {
-    console.log("check", fetcher.state);
     if (fetcher.state === "submitting") {
       shouldReload.current = true;
     }
@@ -91,7 +91,8 @@ export default function ProductIndex() {
   const listProduct = products.products.edges.map((product) => ({
     id: product.node.id,
     title: product.node.title,
-    price: product.node.variants.nodes,
+    image: product.node.media.edges[0]?.node.preview.image.url,
+    price: product.node.variants.nodes[0]?.price,
     tags: product.node.tags,
   }));
 
@@ -124,46 +125,40 @@ export default function ProductIndex() {
     plural: "products",
   };
 
-  const rowMarkup = listProduct.map(({ id, title, price, tags }, index) => (
-    <IndexTable.Row
-      id={id}
-      key={id}
-      selected={selectedResources.includes(id)}
-      position={index}
-    >
-      <IndexTable.Cell>{title}</IndexTable.Cell>
-      <IndexTable.Cell>
-        {price.map((item, idx) => (
-          <span key={idx}>
-            {item.price}
-            {idx !== price.length - 1 ? ", " : ""}
-          </span>
-        ))}
-      </IndexTable.Cell>
-      <IndexTable.Cell>
-        {tags.map((tag, idx) => (
-          <span key={idx}>
-            {tag}
-            {idx !== tags.length - 1 ? ", " : ""}
-          </span>
-        ))}
-      </IndexTable.Cell>
-      <IndexTable.Cell>
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelectedId(id);
-            handleChange();
-          }}
-        >
-          <Icon source={EditIcon} tone="base" />
-        </Button>
-      </IndexTable.Cell>
-    </IndexTable.Row>
-  ));
-  console.log(
-    "ABC: ",
-    fetcher.state == "submitting" || fetcher.state == "loading",
+  const rowMarkup = listProduct.map(
+    ({ id, title, image, price, tags }, index) => (
+      <IndexTable.Row
+        id={id}
+        key={id}
+        selected={selectedResources.includes(id)}
+        position={index}
+      >
+        <IndexTable.Cell>{title}</IndexTable.Cell>
+        <IndexTable.Cell>
+          <img src={image} alt="image" height={100} width={100} />
+        </IndexTable.Cell>
+        <IndexTable.Cell>{price}</IndexTable.Cell>
+        <IndexTable.Cell>
+          {tags.map((tag, idx) => (
+            <span key={idx}>
+              {tag}
+              {idx !== tags.length - 1 ? ", " : ""}
+            </span>
+          ))}
+        </IndexTable.Cell>
+        <IndexTable.Cell>
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedId(id);
+              handleChange();
+            }}
+          >
+            <Icon source={EditIcon} tone="base" />
+          </Button>
+        </IndexTable.Cell>
+      </IndexTable.Row>
+    ),
   );
   return (
     <Frame>
@@ -178,6 +173,7 @@ export default function ProductIndex() {
             onSelectionChange={handleSelectionChange}
             headings={[
               { title: "Title" },
+              { title: "Image" },
               { title: "Price" },
               { title: "Tags" },
               { title: "Actions" },

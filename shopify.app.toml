@@ -3,7 +3,7 @@
 client_id = "5d1d6493bd2e5412e59c98ea76c19cdf"
 name = "duyanhdove"
 handle = "duyanhdove-2"
-application_url = "https://defensive-speaking-surplus-eliminate.trycloudflare.com"
+application_url = "https://holmes-pirates-appropriations-presently.trycloudflare.com"
 embedded = true
 
 [build]
@@ -19,9 +19,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://defensive-speaking-surplus-eliminate.trycloudflare.com/auth/callback",
-  "https://defensive-speaking-surplus-eliminate.trycloudflare.com/auth/shopify/callback",
-  "https://defensive-speaking-surplus-eliminate.trycloudflare.com/api/auth/callback"
+  "https://holmes-pirates-appropriations-presently.trycloudflare.com/auth/callback",
+  "https://holmes-pirates-appropriations-presently.trycloudflare.com/auth/shopify/callback",
+  "https://holmes-pirates-appropriations-presently.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

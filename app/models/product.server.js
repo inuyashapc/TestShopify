@@ -63,7 +63,7 @@ export async function getAllProductWithPagination(
             node {
               id
               title
-              media(first: 2) {
+              media(first: 1) {
                 edges {
                   node {
                     id

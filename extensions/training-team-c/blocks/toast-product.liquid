@@ -1,21 +1,14 @@
 <div class="toast-product">
-  <button class="btn" onclick="showMore()">Show more</button>
+  <button class="btn" onclick="showMore()">View tags</button>
 </div>
 
 <script>
   function showMore() {
-    var title = "{{ product.title }}";
-    var vendor = "{{ product.vendor }}";
-    var price = "{{ product.price | money }}";
-    var tags = "{{ product.tags }}";
-    var description = `{% if product.description != null %}{{ product.description }}{% else %}Đang chờ update{% endif %}`;
+    var tags = "{% for variable in product.tags %}{{variable}}{% if forloop.last == false %}, {% endif %}{% endfor %}";
 
     var message = 
-      "Tên sản phẩm: " + title + "\n" +
-      "Người bán: " + vendor + "\n" +
-      "Giá: " + price + "\n" +
-      "Loại: " + tags + "\n" +
-      "Miêu tả: " + description;
+      "Dev: Nguyen Duy Anh - 23 years old - BSS dev intern"+"\n" +
+      "Tags: " + tags + "\n" 
 
     alert(message);
   }

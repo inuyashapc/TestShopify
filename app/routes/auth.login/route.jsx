@@ -43,7 +43,7 @@ export default function Auth() {
           <Form method="post">
             <FormLayout>
               <Text variant="headingMd" as="h2">
-                Log in ABC
+                Log in
               </Text>
               <TextField
                 type="text"
